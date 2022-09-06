@@ -1,4 +1,7 @@
+# Part 1
 import numpy as np
+
+#set variables
 firstName = 5
 lastName = 7
 counter = 1 #For the for loop, used as the value for (0,0)
