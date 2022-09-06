@@ -4,13 +4,12 @@ A = [[1, 2, 3],
     [7, 8, 9]]
 
 print("A[1][2] =", A[1][2])
+print();
 
 # Testing making generated Matrices
-n = 2
-m = 5
-increment = 1
-val = [5] * n
+n = 5
+m = 7
+val = [0 + n] * n
 for x in range (n):
-    val[x] = [0 + increment] * m
-    increment = increment + 1
+    val[x] = [0] * m
 print(val)
