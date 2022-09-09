@@ -30,16 +30,16 @@ mat5 = np.loadtxt("bstamper_mat5.txt")
 
 #mat23
 mat23 = np.add(mat2, mat3)
-np.savetxt('bstamper_p2_out23.txt', mat23)
+np.savetxt('bstamper_p2_out23.txt', mat23, fmt='%1.1f')
 
 #mat32
 mat32 = np.add(mat3, mat2)
-np.savetxt('bstamper_p2_out32.txt', mat32)
+np.savetxt('bstamper_p2_out32.txt', mat32, fmt='%1.1f')
 
 #mat45
 mat45 = np.add(mat4, mat5)
-np.savetxt('bstamper_p2_out45.txt', mat45)
+np.savetxt('bstamper_p2_out45.txt', mat45, fmt='%1.1f')
 
 #mat54
 mat54 = np.add(mat5, mat4)
-np.savetxt('bstamper_p2_out54.txt', mat54)
+np.savetxt('bstamper_p2_out54.txt', mat54, fmt='%1.1f')
