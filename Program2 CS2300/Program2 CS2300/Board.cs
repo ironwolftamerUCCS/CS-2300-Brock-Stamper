@@ -7,14 +7,19 @@ public class Board
 {
     #region Fields
 
+    // Game board
     private char[,] board;
 
+    // # of turns to remember
     private int turnsToRemember;
 
     #endregion
 
     #region Properties
 
+    /// <summary>
+    /// # of turns to remember
+    /// </summary>
     public int TurnsToRemember
     {
         set { turnsToRemember = value; }
@@ -127,7 +132,10 @@ public class Board
     /// <param name="endColumn">column line ends</param>
     private void PlayLine(int player, float startRow, float startColumn, float endRow, float endColumn)
     {
-
+        if (CheckLine(startRow, startColumn, endRow, endColumn))
+        {
+            //do shit
+        }
     }
 
     /// <summary>

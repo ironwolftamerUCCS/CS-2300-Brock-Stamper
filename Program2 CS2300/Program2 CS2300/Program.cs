@@ -28,6 +28,9 @@ namespace Program2_CS2300
                 // Generate the board
                 Board board = new Board(boardSize);
 
+                // Set turns to remember
+                board.TurnsToRemember = turnsToRemember;
+
                 board.PlayFile(inputFileAsList);
 
                 board.PrintBoard();

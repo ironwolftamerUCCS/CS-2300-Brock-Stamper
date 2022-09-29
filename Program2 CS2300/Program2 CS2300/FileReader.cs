@@ -39,6 +39,7 @@ public class FileReader
         // Catch any exceptions and print the message then return null
         catch (Exception e)
         {
+            // Print exception
             Console.WriteLine(e.Message);
             return null;
         }
