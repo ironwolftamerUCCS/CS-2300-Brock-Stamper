@@ -4,6 +4,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 
+/// <summary>
+/// Reads files
+/// </summary>
 public class FileReader
 {
     /// <summary>

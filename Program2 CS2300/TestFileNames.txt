@@ -1,0 +1,3 @@
+UndefinedLineCheck.txt
+ZeroSlopeLineCheck.txt
+OneSlopeLineCheck.txt

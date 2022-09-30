@@ -26,14 +26,9 @@ namespace Program2_CS2300
                 int turnsToRemember = int.Parse(gameConfigSubstrings[1]);
 
                 // Generate the board
-                Board board = new Board(boardSize);
-
-                // Set turns to remember
-                board.TurnsToRemember = turnsToRemember;
+                Board board = new Board(boardSize, turnsToRemember);
 
                 board.PlayFile(inputFileAsList);
-
-                board.PrintBoard();
             }
         }
     }
