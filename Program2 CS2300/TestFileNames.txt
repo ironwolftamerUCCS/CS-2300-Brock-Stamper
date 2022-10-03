@@ -1,3 +1,10 @@
 UndefinedLineCheck.txt
 ZeroSlopeLineCheck.txt
 OneSlopeLineCheck.txt
+BiggerBoardCheck.txt
+SlopeMoreThanOneCheck.txt
+SlopeLessThanOneCheck.txt
+
+p2-1.txt
+p2-2.txt
+

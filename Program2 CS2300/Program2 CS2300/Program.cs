@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
+using System.Runtime.Serialization.Formatters;
 
 namespace Program2_CS2300
 {
@@ -10,6 +9,7 @@ namespace Program2_CS2300
         static void Main(string[] args)
         {
             // Prompt for file being tested
+            Console.Write("Please enter the path for the file you would like to play: ");
             string inputFile = Console.ReadLine();
 
             // Gets the input for the game
