@@ -14,6 +14,7 @@ public class Board
 
     // # of turns to remember
     private int turnsToRemember;
+    Line[] lines;
 
     #endregion
 
@@ -45,6 +46,7 @@ public class Board
 
         // Set turnsToRemember field
         this.turnsToRemember = turnsToRemember;
+        this.lines = new Line[turnsToRemember];
     }
 
     #endregion
@@ -111,8 +113,27 @@ public class Board
             // Play the line
             PlayLine(player, line);
 
+            // Store the line (if necessary)
+            int trackerForRemembering = 0;
+            if (turnsToRemember > 0)
+            {
+                if (trackerForRemembering < turnsToRemember)
+                {
+                    lines[trackerForRemembering] = line;
+                    trackerForRemembering++;
+                }
+                else
+                {
+                    Line[] tempArray = lines;
+                    Array.Copy(tempArray, 1, lines, 0, tempArray.Length);
+                    lines[trackerForRemembering] = line;
+                }
+            }
+
+            // Print the board
             PrintBoard();
 
+            // Print a blank line
             Console.WriteLine();
 
             index++;
@@ -492,6 +513,17 @@ public class Board
     /// <returns>true is line can be played, false if line cannot be played</returns>
     private bool CheckLine(Line line)
     {
+        if (lines[0] != null)
+        {
+            foreach (Line l in lines)
+            {
+                if (line.AbsoluteValueOfSlope != -1 && line.Slope == -1 / l.Slope) { return false; }
+                else if (line.AbsoluteValueOfSlope == -1 && l.Slope == 0) { return false; }
+                else if (line.StartRow == l.StartRow && line.StartColumn == l.StartColumn) { return false; }
+                else if (line.EndRow == l.EndRow && line.EndColumn == l.EndColumn) { return false; }
+                else { return true; }
+            }
+        }
         return true;
     }
 
@@ -529,6 +561,12 @@ public class Board
         return newArray;
     }
 
+    /// <summary>
+    /// Multiplies a 1D vector by a scalar
+    /// </summary>
+    /// <param name="vector">Vector to be multiplied</param>
+    /// <param name="scalar">scalar to mulptiply</param>
+    /// <returns>new 1D vector</returns>
     private float[] MulitplyScalar(float[] vector, float scalar)
     {
         float[] newArray = new float[vector.Length];

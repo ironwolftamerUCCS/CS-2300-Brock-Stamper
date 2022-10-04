@@ -4,6 +4,7 @@ OneSlopeLineCheck.txt
 BiggerBoardCheck.txt
 SlopeMoreThanOneCheck.txt
 SlopeLessThanOneCheck.txt
+RememberanceCheck.txt
 
 p2-1.txt
 p2-2.txt

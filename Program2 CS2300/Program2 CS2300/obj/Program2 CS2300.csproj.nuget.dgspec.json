@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Github\\CS-2300-Brock-Stamper\\Program2 CS2300\\Program2 CS2300\\Program2 CS2300.csproj": {}
+    "C:\\Users\\Brock\\Documents\\GitHub\\CS-2300-Brock-Stamper\\Program2 CS2300\\Program2 CS2300\\Program2 CS2300.csproj": {}
   },
   "projects": {
-    "D:\\Github\\CS-2300-Brock-Stamper\\Program2 CS2300\\Program2 CS2300\\Program2 CS2300.csproj": {
+    "C:\\Users\\Brock\\Documents\\GitHub\\CS-2300-Brock-Stamper\\Program2 CS2300\\Program2 CS2300\\Program2 CS2300.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Github\\CS-2300-Brock-Stamper\\Program2 CS2300\\Program2 CS2300\\Program2 CS2300.csproj",
+        "projectUniqueName": "C:\\Users\\Brock\\Documents\\GitHub\\CS-2300-Brock-Stamper\\Program2 CS2300\\Program2 CS2300\\Program2 CS2300.csproj",
         "projectName": "Program2 CS2300",
-        "projectPath": "D:\\Github\\CS-2300-Brock-Stamper\\Program2 CS2300\\Program2 CS2300\\Program2 CS2300.csproj",
+        "projectPath": "C:\\Users\\Brock\\Documents\\GitHub\\CS-2300-Brock-Stamper\\Program2 CS2300\\Program2 CS2300\\Program2 CS2300.csproj",
         "packagesPath": "C:\\Users\\Brock\\.nuget\\packages\\",
-        "outputPath": "D:\\Github\\CS-2300-Brock-Stamper\\Program2 CS2300\\Program2 CS2300\\obj\\",
+        "outputPath": "C:\\Users\\Brock\\Documents\\GitHub\\CS-2300-Brock-Stamper\\Program2 CS2300\\Program2 CS2300\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Brock\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -55,7 +55,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.400\\RuntimeIdentifierGraph.json"
         }
       }
     }

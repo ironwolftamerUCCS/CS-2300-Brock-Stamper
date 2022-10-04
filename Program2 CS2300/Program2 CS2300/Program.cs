@@ -6,6 +6,7 @@ namespace Program2_CS2300
 {
     internal class Program
     {
+        // Got help from Kaylee on this. About 10-20% (she gave me the idea to make a line class and helped with some of the logic)
         static void Main(string[] args)
         {
             // Prompt for file being tested
