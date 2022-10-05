@@ -113,23 +113,6 @@ public class Board
             // Play the line
             PlayLine(player, line);
 
-            // Store the line (if necessary)
-            int trackerForRemembering = 0;
-            if (turnsToRemember > 0)
-            {
-                if (trackerForRemembering < turnsToRemember)
-                {
-                    lines[trackerForRemembering] = line;
-                    trackerForRemembering++;
-                }
-                else
-                {
-                    Line[] tempArray = lines;
-                    Array.Copy(tempArray, 1, lines, 0, tempArray.Length);
-                    lines[trackerForRemembering] = line;
-                }
-            }
-
             // Print the board
             PrintBoard();
 
@@ -490,7 +473,24 @@ public class Board
                         index--;
                     }
                 }
-            } 
+            }
+
+            // Store the line (if necessary)
+            int trackerForRemembering = 0;
+            if (turnsToRemember > 0)
+            {
+                if (trackerForRemembering < turnsToRemember)
+                {
+                    lines[trackerForRemembering] = line;
+                    trackerForRemembering++;
+                }
+                else
+                {
+                    Line[] tempArray = lines;
+                    Array.Copy(tempArray, 1, lines, 0, tempArray.Length);
+                    lines[trackerForRemembering] = line;
+                }
+            }
         }
     }
 
