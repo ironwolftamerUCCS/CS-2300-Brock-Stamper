@@ -49,7 +49,7 @@ SolveEigenThings (A (2x2 matrix)) : Solves for eigenvalues, the eigenvector, R, 
 
 	Solve for e1 and e2
 Check if inside of square root of quadratic equation greater than or equal to 0
-Declare insideOfQuadratric and set it equal to (2 * a11 * a22)^2 – 4(a11 * a22 – a12 * a21)
+Declare insideOfQuadratric and set it equal to (a11 * a22)^2 – 4(a11 * a22 – a12 * a21)
 If insideOfQuadratic is less than 0
 	No real eigen values
 else
