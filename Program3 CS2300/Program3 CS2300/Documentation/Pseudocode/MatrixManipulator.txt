@@ -1,0 +1,58 @@
+MatrixManipulator: Script to perform various matrix manipulations and calculations
+
+function Print2DMatrix (a 2D matrix)
+	iterates through each row printing out the number in each column of the row and prints a white space between the columns
+
+function SolveMatrixEquation (A (2x2 matrix), b (2x1 matrix)) : solve the equation Ax=b for x
+
+	Instantiate matrices for later
+
+	if bottom left of a is not 0
+		set the shear using -a11/a21 for bottom left, set rest according to the indentity matrix
+		multiply the shear onto A and B using MatrixMultiplier2D
+
+	if bottom right of a is 0
+		if b2 is 0
+			print out "infinite solutions" to user
+
+		else
+			print out "no solutions" to user
+	
+		exit the function
+		
+	else if the top right is not 0
+		Set the shear using -a12/a22 for the top right, set rest according to the indentity matrix
+		multiply the shear onto A and B using the MatrixMultiplier2D
+
+	
+	solve for x1 by dividing b1 by a11
+	solve for x2 by dividing b2 by a22
+	print out solution
+
+function MatrixMultiplier2D (2 2D matrices)
+
+	Instantiate output
+	Support for the loop
+
+	Start at each row of the first matrix and save each column value in a list
+	Take each column of the second matrix and save each row value in a list
+
+	loop through and add together the multiples of the same positions in each of the two aformentioned lists and save it to the appropriate place in the output matrix
+	reset the column list of the second matrix and go back and save the next column into the list
+
+	when all the columns of the second matrix are saved and mulitplied by the rows of the first matrix reset the row list and go back 2 steps
+	when all the rows of the first matrix are used return the new matrix
+
+SolveEigenThings (A (2x2 matrix)) : Solves for eigenvalues, the eigenvector, R, and computes RΛRT
+
+	Declare matrices for later
+
+	Solve for e1 and e2
+Check if inside of square root of quadratic equation greater than or equal to 0
+Declare insideOfQuadratric and set it equal to (2 * a11 * a22)^2 – 4(a11 * a22 – a12 * a21)
+If insideOfQuadratic is less than 0
+	No real eigen values
+else
+	Compute e1 and e2
+	e1 equals negated a11 * a22 plus insideOfQuadratic all divided by 2
+	e2 equals negated a11 * a22 minus insideOfQuadratic all divided by 2

@@ -1,0 +1,27 @@
+FileProcessor: Script to process the input files and out
+
+function ReadInAAndB (argument 1 (A file name)) : reads in A and b for the equation Ax=b
+	
+	Instantiate matrices for later
+	Instantiate the stream reader
+
+	try
+		open and read the file given by argument one
+		take each line, split it up by the spaces, and store them into the appropriate matrix
+		(col 1 to A col 1, col 2 to A col 2, and col 3 to B col 1)
+		
+		add both of the new matrices to the output
+		return both matrices as a list to the user
+
+	catch
+		catch any exceptions and print the out
+
+	finally
+		close the file regardless of if an exception is found
+		
+
+	
+
+
+
+

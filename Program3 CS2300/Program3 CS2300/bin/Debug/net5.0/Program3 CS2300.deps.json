@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v5.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v5.0": {
+      "Program3 CS2300/1.0.0": {
+        "runtime": {
+          "Program3 CS2300.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Program3 CS2300/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
