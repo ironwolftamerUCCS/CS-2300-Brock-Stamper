@@ -34,14 +34,15 @@ public class MatrixManipulator
     /// <param name="A">The 2x2 transformation matrix</param>
     /// <param name="B">The 2x1 result</param>
     /// <param name="print">Whether or not to print</param>
-    public static float[,] SolveMatrixEquation(float[,] A, float[,] B, bool print)
+    public static float[,] SolveMatrixEquation(float[,] A, float[,] B, bool print = false)
     {
         //Declare variables, s is shear for A, X is solution
         float[,] shear = new float[2, 2];
         float[,] X = new float[2, 1];
 
         //Setting and applying shear for left side
-        if (A[1, 0] != 0)
+        A[1, 0] = CanRoundToZero(A[1, 0]);
+        if (A[1, 0] != 0 )
         {
             //Set shear
             shear[1, 0] = (A[1, 0]  / -A[0, 0]);
@@ -56,20 +57,29 @@ public class MatrixManipulator
 
         //Check to see if previous shear turned the bottom rows completely to 0 or if the bottom row was already all 0's
         //(We already checked the bottom left spot so we only need to check the bottom right)
+        A[1, 1] = CanRoundToZero(A[1, 1]);
+        A[1, 0] = CanRoundToZero(A[1, 0]);
+        A[0, 1] = CanRoundToZero(A[0, 1]);
         if (A[1, 1] == 0)
         {
             //If b2 = 0, then infinite solutions, if it doesn't, then no solutions
+            B[1, 0] = CanRoundToZero(B[1, 0]);
             if (B[1, 0] != 0)
             {
-                Console.WriteLine("No solution");
+                if (print) { Console.WriteLine("No solution"); }
+
+                //Since there is no solution, returns null
+                return null;
             }
             else
             {
-                Console.WriteLine("Infinite Solutions");
+                if (print) { Console.WriteLine("Infinite Solutions"); }
+                
+                //Let x2 = 0, solve for x1
+                X[1, 0] = 1;
+                X[0, 0] = SigDigRounder(-A[0, 1] / A[0, 0], 4);
+                return X;
             }
-
-            //Indicate an exception was caught
-            return null;
         }
         //Setting and applying shear for right side
         else if (A[0, 1] != 0)
@@ -86,10 +96,10 @@ public class MatrixManipulator
         }
 
         //Find x1 using b1 and a11
-        X[0, 0] = (B[0, 0] / A[0, 0]);
+        X[0, 0] = SigDigRounder(B[0, 0] / A[0, 0], 4);
 
         //Find x2 using b2 and a22
-        X[1, 0] = (B[1, 0] / A[1, 1]);
+        X[1, 0] = SigDigRounder(B[1, 0] / A[1, 1], 4);
 
         //Print and return solution
         if (print) 
@@ -186,6 +196,13 @@ public class MatrixManipulator
         eValues[0, 0] = (-b + MathF.Sqrt(insideOfQuadratic)) / 2;
         eValues[1, 0] = (-b - MathF.Sqrt(insideOfQuadratic)) / 2;
 
+        //Create and print lambda
+        float[,] lambda = new float[2, 2];
+        lambda[0, 0] = eValues[0, 0];
+        lambda[1, 1] = eValues[1, 0];
+        Console.WriteLine("Lambda:");
+        Print2DMatrix(lambda);
+
         //Solve Eigenvectors
         //Set new 2x2 matrices
         float[,] eigenManipulatedM1 = new float[2, 2];
@@ -205,11 +222,65 @@ public class MatrixManipulator
         eigenManipulatedM2[0, 1] = matrix[0, 1];
 
         //Pass in each eigenvector and the zero vector and print them
-        float[,] eigenvector1 = SolveMatrixEquation(eigenManipulatedM1, zeroVector, true);
-        float[,] eigenvector2 = SolveMatrixEquation(eigenManipulatedM2, zeroVector, true);
-        Console.WriteLine("Eigen Vector 1:");
-        Print2DMatrix(eigenvector1);
-        Console.WriteLine("Eigen Vector 1:");
-        Print2DMatrix(eigenvector2);
+        float[,] eigenvector1 = SolveMatrixEquation(eigenManipulatedM1, zeroVector);
+        float[,] eigenvector2 = SolveMatrixEquation(eigenManipulatedM2, zeroVector);
+
+        //Create and print R
+        float[,] R = new float[2, 2];
+        R[0, 0] = eigenvector1[0, 0];
+        R[1, 0] = eigenvector1[1, 0];
+        R[0, 1] = eigenvector2[0, 0];
+        R[1, 1] = eigenvector2[1, 0];
+        Console.WriteLine("R:");
+        Print2DMatrix(R);
+
+        //Transpose R
+        float[,] rTransposed = R;
+        rTransposed[1, 0] = R[0, 1];
+        rTransposed[0, 1] = R[1, 0];
+
+        //Multiply R by lambda then by rTransposed
+        float[,] rLambda = MatrixMultiplier2D(R, lambda);
+        float[,] rLambdaRTransposed = MatrixMultiplier2D(rLambda, rTransposed);
+        Print2DMatrix(rLambdaRTransposed);
+    }
+
+    /// <summary>
+    /// Rounds a number to a certain amount of signinificant digits
+    /// </summary>
+    /// <param name="number">number to round</param>
+    /// <param name="numSigDig">number of significant digits</param>
+    /// <returns>rounded number</returns>
+    /// Taken from Microsoft Forums from a "nobugz"
+    public static float SigDigRounder (float number, int numSigDig)
+    {
+        if (number == 0.0) { return number; }
+        bool neg = number < 0;
+        if (neg) { number = -number; }
+        float number10 = MathF.Log10(number);
+        float scale = MathF.Pow(10, MathF.Floor(number10) - numSigDig + 1);
+        number = MathF.Round(number / scale) * scale;
+        if (neg) { number = -number; }
+        return number;
+    }
+
+    /// <summary>
+    /// Rounds a number to zero if it is sufficiently small enough
+    /// </summary>
+    /// <param name="number">number to check and round</param>
+    /// <returns>zero or the initial number</returns>
+    public static float CanRoundToZero (float number)
+    {
+        //Set tolerance
+        float zeroTolerance = 0.000001f;
+
+        //Check if number is within the tolerance
+        if (number < zeroTolerance && number > -zeroTolerance)
+        {
+            //Set to 0 if so
+            number = 0;
+        }
+
+        return number;
     }
 }
