@@ -19,7 +19,7 @@ public class MatrixManipulator
         {
             while (col < matrix.GetLength(1))
             {
-                Console.Write(matrix[row, col] + " ");
+                Console.Write(SigDigRounder(matrix[row, col], 4) + " ");
                 col++;
             }
             Console.WriteLine();
@@ -66,18 +66,18 @@ public class MatrixManipulator
             B[1, 0] = CanRoundToZero(B[1, 0]);
             if (B[1, 0] != 0)
             {
-                if (print) { Console.WriteLine("No solution"); }
+                if (print) { Console.WriteLine("System Undetermined"); }
 
                 //Since there is no solution, returns null
                 return null;
             }
             else
             {
-                if (print) { Console.WriteLine("Infinite Solutions"); }
+                if (print) { Console.WriteLine("System Inconsistant"); }
                 
                 //Let x2 = 0, solve for x1
                 X[1, 0] = 1;
-                X[0, 0] = SigDigRounder(-A[0, 1] / A[0, 0], 4);
+                X[0, 0] = -A[0, 1] / A[0, 0];
                 return X;
             }
         }
@@ -96,10 +96,10 @@ public class MatrixManipulator
         }
 
         //Find x1 using b1 and a11
-        X[0, 0] = SigDigRounder(B[0, 0] / A[0, 0], 4);
+        X[0, 0] = B[0, 0] / A[0, 0];
 
         //Find x2 using b2 and a22
-        X[1, 0] = SigDigRounder(B[1, 0] / A[1, 1], 4);
+        X[1, 0] = B[1, 0] / A[1, 1];
 
         //Print and return solution
         if (print) 
@@ -183,18 +183,18 @@ public class MatrixManipulator
         float c = (matrix[0, 0] * matrix[1, 1]) - (matrix[0, 1] * matrix[1, 0]);
         
         //Using the quadratic equation plug check the inside of the quadratic
-        float insideOfQuadratic = MathF.Pow(b, 2) - 4 * c;
+        float discriminant = MathF.Pow(b, 2) - 4 * c;
 
         //If the inside of the quadratic equation is less than 0, there are no real eigen values
-        if (insideOfQuadratic < 0)
+        if (discriminant < 0)
         {
             Console.WriteLine("No real eigenvalues");
             return;
         }
 
         //Calculate each eigen value, no sorting based on dominance
-        eValues[0, 0] = (-b + MathF.Sqrt(insideOfQuadratic)) / 2;
-        eValues[1, 0] = (-b - MathF.Sqrt(insideOfQuadratic)) / 2;
+        eValues[0, 0] = (-b + MathF.Sqrt(discriminant)) / 2;
+        eValues[1, 0] = (-b - MathF.Sqrt(discriminant)) / 2;
 
         //Create and print lambda
         float[,] lambda = new float[2, 2];
@@ -202,6 +202,8 @@ public class MatrixManipulator
         lambda[1, 1] = eValues[1, 0];
         Console.WriteLine("Lambda:");
         Print2DMatrix(lambda);
+
+
 
         //Solve Eigenvectors
         //Set new 2x2 matrices
@@ -235,14 +237,50 @@ public class MatrixManipulator
         Print2DMatrix(R);
 
         //Transpose R
-        float[,] rTransposed = R;
+        float[,] rTransposed = new float[2, 2];
         rTransposed[1, 0] = R[0, 1];
         rTransposed[0, 1] = R[1, 0];
+        rTransposed[0, 0] = R[0, 0];
+        rTransposed[1, 1] = R[1, 1];
 
-        //Multiply R by lambda then by rTransposed
+        //Multiply R by lambda then by rTransposed the print the resulting eigendecomp
         float[,] rLambda = MatrixMultiplier2D(R, lambda);
-        float[,] rLambdaRTransposed = MatrixMultiplier2D(rLambda, rTransposed);
-        Print2DMatrix(rLambdaRTransposed);
+        float[,] eigenDecomp = MatrixMultiplier2D(rLambda, rTransposed);
+        Console.WriteLine("EigenDecomp:");
+        Print2DMatrix(eigenDecomp);
+
+        //Check if eigendecomp is equal to matrix
+        //Set bool
+        bool isSame = true;
+
+        if (eigenDecomp[0, 0] != matrix[0, 0])
+        {
+            //Find the factor that eigendecomp may be mulitplied by
+            float factor = matrix[0, 0] / eigenDecomp[0, 0];
+
+            //Loop support
+            int row = 0;
+            int col = 0;
+
+            //Loop through eigenDecomp and make sure each cell is equal to the same cell in matrix
+            while (row < matrix.GetLength(0))
+            {
+                while (col < matrix.GetLength(1))
+                {
+                    if (MathF.Round(eigenDecomp[row, col] * factor) != matrix[row, col])
+                    {
+                        isSame = false;
+                    }
+                    col++;
+                }
+                row++;
+                col = 0;
+            }
+        }
+
+        //Print out whether is same is true or false
+        if (isSame) { Console.WriteLine("Is same: " + 1);  }
+        else { Console.WriteLine("Is same: " + 0);  }
     }
 
     /// <summary>
@@ -254,13 +292,28 @@ public class MatrixManipulator
     /// Taken from Microsoft Forums from a "nobugz"
     public static float SigDigRounder (float number, int numSigDig)
     {
+        //Make sure number isn't zero
         if (number == 0.0) { return number; }
+
+        //Check to see if number is negative
         bool neg = number < 0;
+
+        //If so make positive
         if (neg) { number = -number; }
+
+        //Take the natural log of the number
         float number10 = MathF.Log10(number);
+
+        //Find how many decimal points to round to
         float scale = MathF.Pow(10, MathF.Floor(number10) - numSigDig + 1);
+
+        //Round the number to the numSigDig
         number = MathF.Round(number / scale) * scale;
+
+        //Flip number back to negative if needed
         if (neg) { number = -number; }
+
+
         return number;
     }
 
