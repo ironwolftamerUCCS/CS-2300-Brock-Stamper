@@ -72,14 +72,24 @@ function SolveEigenThings (A (2x2 matrix)) : Solves for eigenvalues, the eigenve
 	First set a value to see if the eigendecomp is a scaled version of the input matrix
 	Go through each of the input matrix's cells and see if the eigendecomp times the factor is that value
 
-	Print out if it is the same or not to user 
+	Print out if it is the same or not to user
+
+function SolveTriangleThings (triangle's vertices) : Solves for the area of the triangle then the distance to the line or plane of the 3rd point
 
 function SigDigRounder (A number, number of significant digits) : Rounds the input number to the appropriate amount of significant digits
 
 	Check to make sure the number isn't zero, is so, return the number
 	
-	Check to see if the number is negative, if so make it positive
+	set scale to be the 10 raised to the natural log of the absolute value of the number rounded down plus 1
+	set the number to be the the number divided by the scale to the number of significant digits then multiply it by scale again to return to a decimal form
 
-	Take the natural log of the number
-	Get the number of decimal points to round to
-	set the number equal to the the number divided by the numbers
+	return the number
+
+function CanRoundToZero (a number) : rounds a number to zero if it is within a certain tolerance
+	
+	Set tolerance
+	
+	Check if the number is within the tolerance and the negated tolerance
+		if so, set number to zero
+
+	return the number

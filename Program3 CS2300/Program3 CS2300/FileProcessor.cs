@@ -64,4 +64,59 @@ public class FileProcessor
             }
         }
     }
+
+    public static float[,] ReadInTriangleVertices(string fileName)
+    {
+        // Instantiate the streamreader
+        StreamReader input = null;
+        try
+        {
+            //Instantiate triangle vertices matrix
+            float[,] vertices = new float[3, 3];
+
+            // Create stream reader object
+            input = File.OpenText(fileName);
+
+            // Read and put each line into the string
+            int i = 0; //Incrementer
+            string line = input.ReadLine();
+            while (line != null)
+            {
+                string[] substringOfLines = line.Split(' ');
+                vertices[i, 0] = float.Parse(substringOfLines[0]);
+                vertices[i, 1] = float.Parse(substringOfLines[1]);
+                vertices[i, 2] = float.Parse(substringOfLines[2]);
+                line = input.ReadLine();
+                i++;
+            }
+
+            //Called if there is not a third line of values
+            if (i == 2)
+            {
+                vertices[i, 0] = 1;
+                vertices[i, 1] = 1;
+                vertices[i, 2] = 1;
+            }
+
+            //Add A and B to the list of matrices, output
+            return vertices;
+        }
+
+        // Catch any exceptions and print the message then return null
+        catch (Exception e)
+        {
+            // Print exception
+            Console.WriteLine(e.Message);
+            return null;
+        }
+
+        finally
+        {
+            // Always close input file
+            if (input != null)
+            {
+                input.Close();
+            }
+        }
+    }
 }

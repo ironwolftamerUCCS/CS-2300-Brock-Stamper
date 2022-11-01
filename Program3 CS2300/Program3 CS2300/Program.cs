@@ -32,7 +32,11 @@ namespace Program3_CS2300
                     Console.WriteLine("------");
                     MatrixManipulator.SolveEigenThings(A);
                     break;
-                case 3: break;
+                case 3:
+                    float[,] vertices = FileProcessor.ReadInTriangleVertices(fileName);
+                    Console.WriteLine("------");
+                    MatrixManipulator.SolveTriangleThings(vertices);
+                    break;
 
                 default: Console.WriteLine("Invalid answer"); break;
             }

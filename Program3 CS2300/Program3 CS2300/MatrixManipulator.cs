@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using static System.Formats.Asn1.AsnWriter;
 
 public class MatrixManipulator
 {
@@ -66,7 +67,7 @@ public class MatrixManipulator
             B[1, 0] = CanRoundToZero(B[1, 0]);
             if (B[1, 0] != 0)
             {
-                if (print) { Console.WriteLine("System Undetermined"); }
+                if (print) { Console.WriteLine("System Inconsistant"); }
 
                 //Since there is no solution, returns null
                 return null;
@@ -284,36 +285,43 @@ public class MatrixManipulator
     }
 
     /// <summary>
+    /// Solves for the area of the triangle given by the points of the matrix
+    /// Also solves for the distance to the line (2D triangle) of the 3rd column point
+    /// or solves for the distance to the plane (3D triangle) of the 3rd column point
+    /// </summary>
+    /// <param name="matrix">triangle's vertices</param>
+    public static void SolveTriangleThings(float[,] matrix)
+    {
+        //Find the vectors that define the triangle
+        float[] vector1 = new float[] { matrix[0, 0] - matrix[0, 1], matrix[1, 0] - matrix[1, 1], matrix[2, 0] - matrix[2, 1] };
+        float[] vector2 = new float[] { matrix[0, 1] - matrix[0, 2], matrix[1, 1] - matrix[1, 2], matrix[2, 1] - matrix[2, 2] };
+
+        ////Find determinant of triangle
+        //float determinant = matrix[0, 0] * (matrix[1, 1] * matrix[2, 2] - matrix[1, 2] * matrix[2, 1])
+        //    - matrix[1, 0] * (matrix[0, 1] * matrix[2, 2] - matrix[0, 2] * matrix[2, 1])
+        //    + matrix[2, 0] * (matrix[0, 1] * matrix[1, 2] - matrix[0, 2] * matrix[1, 1]);
+
+        ////Calculate area of the triangle
+        //float area = 0.5f * MathF.Abs(determinant);
+
+        ////Prints out the area
+        //Console.WriteLine("Area:");
+        //Console.WriteLine(area);
+    }
+
+    /// <summary>
     /// Rounds a number to a certain amount of signinificant digits
     /// </summary>
     /// <param name="number">number to round</param>
     /// <param name="numSigDig">number of significant digits</param>
     /// <returns>rounded number</returns>
-    /// Taken from Microsoft Forums from a "nobugz"
+    /// Taken from Stack Overflow from a "P Daddy"
     public static float SigDigRounder (float number, int numSigDig)
     {
-        //Make sure number isn't zero
-        if (number == 0.0) { return number; }
+        if (number == 0) { return number; }
 
-        //Check to see if number is negative
-        bool neg = number < 0;
-
-        //If so make positive
-        if (neg) { number = -number; }
-
-        //Take the natural log of the number
-        float number10 = MathF.Log10(number);
-
-        //Find how many decimal points to round to
-        float scale = MathF.Pow(10, MathF.Floor(number10) - numSigDig + 1);
-
-        //Round the number to the numSigDig
-        number = MathF.Round(number / scale) * scale;
-
-        //Flip number back to negative if needed
-        if (neg) { number = -number; }
-
-
+        float scale = MathF.Pow(10, MathF.Floor(MathF.Log10(MathF.Abs(number))) + 1);
+        number = scale * MathF.Round(number / scale, numSigDig);
         return number;
     }
 
