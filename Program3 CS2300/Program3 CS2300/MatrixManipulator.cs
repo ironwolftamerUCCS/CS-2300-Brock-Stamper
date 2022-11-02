@@ -286,27 +286,75 @@ public class MatrixManipulator
 
     /// <summary>
     /// Solves for the area of the triangle given by the points of the matrix
-    /// Also solves for the distance to the line (2D triangle) of the 3rd column point
-    /// or solves for the distance to the plane (3D triangle) of the 3rd column point
+    /// Also solves for the distance to the line that spans the first 2 points (2D triangle) of the 3rd point
+    /// or solves for the distance to the plane that bisects the first 2 points (3D triangle) of the 3rd point
     /// </summary>
     /// <param name="matrix">triangle's vertices</param>
     public static void SolveTriangleThings(float[,] matrix)
     {
         //Find the vectors that define the triangle
-        float[] vector1 = new float[] { matrix[0, 0] - matrix[0, 1], matrix[1, 0] - matrix[1, 1], matrix[2, 0] - matrix[2, 1] };
-        float[] vector2 = new float[] { matrix[0, 1] - matrix[0, 2], matrix[1, 1] - matrix[1, 2], matrix[2, 1] - matrix[2, 2] };
+        float[] vector1 = new float[] { matrix[0, 0] - matrix[0, 1], matrix[1, 0] - matrix[1, 1], matrix[2, 0] - matrix[2, 1] }; //pt 1 to pt 2
+        float[] vector2 = new float[] { matrix[0, 0] - matrix[0, 2], matrix[1, 0] - matrix[1, 2], matrix[2, 0] - matrix[2, 2] }; //pt 1 to pt 3
 
-        ////Find determinant of triangle
-        //float determinant = matrix[0, 0] * (matrix[1, 1] * matrix[2, 2] - matrix[1, 2] * matrix[2, 1])
-        //    - matrix[1, 0] * (matrix[0, 1] * matrix[2, 2] - matrix[0, 2] * matrix[2, 1])
-        //    + matrix[2, 0] * (matrix[0, 1] * matrix[1, 2] - matrix[0, 2] * matrix[1, 1]);
+        //Find the cross product (also the normal to the plane)
+        float[] crossProduct = new float[] { vector1[1] * vector2[2] - vector2[1] * vector1[2],
+                                            vector1[2] * vector2[0] - vector2[2] * vector1[0],
+                                            vector1[0] * vector2[1] - vector2[0] * vector1[1]};
 
-        ////Calculate area of the triangle
-        //float area = 0.5f * MathF.Abs(determinant);
+        //Find the magnitude of the cross product and half it to get the area of the triangle
+        float area = MathF.Sqrt(MathF.Pow(crossProduct[0], 2) + MathF.Pow(crossProduct[1], 2) + MathF.Pow(crossProduct[2], 2)) / 2;
 
-        ////Prints out the area
-        //Console.WriteLine("Area:");
-        //Console.WriteLine(area);
+        //Prints out the area
+        Console.WriteLine("Area:");
+        Console.WriteLine(SigDigRounder(area, 4));
+
+        //Find the distance of the third point to the line if the triangle is 2D
+        if (matrix[2, 0] == 1 && matrix[2, 1] == 1 && matrix[2, 2] == 1)
+        {
+            //Isolate the point on the line
+            float[] point = new float[] { matrix[0, 0], matrix[1, 0] };
+
+            //Make vector 1 into a 1d vector
+            float[] vector1Transposed = new float[] { vector1[0], vector1[1] };
+
+            //Find t (from equation t = v dot w divided by magnitude of v squared
+            float t = (vector1Transposed[0] * vector2[0] + vector1Transposed[1] * vector2[1]) / (MathF.Pow(vector1Transposed[0], 2) + MathF.Pow(vector1Transposed[1], 2));
+
+            //Find the foot of the point
+            float[] foot = AddArrays(point, MulitplyScalar(vector1Transposed, t));
+
+            //Find the vector that goes from the foot to the third point
+            float[] distanceVector = new float[] { foot[0] - matrix[0, 2], foot[1] - matrix[1, 2] };
+
+            //Find the magnitude of the vector (which will be the distance)
+            float distance = MathF.Sqrt(MathF.Pow(distanceVector[0], 2) + MathF.Pow(distanceVector[1], 2));
+
+            //Print the distance of the point to the line
+            Console.WriteLine("Distance of 3rd point to line:");
+            Console.WriteLine(SigDigRounder(distance, 4));
+        }
+        else
+        {
+            //Isolate point 1, point 2, and point 3
+            float[] point1 = new float[] { matrix[0, 0], matrix[1, 0], matrix[2, 0] };
+            float[] point2 = new float[] { matrix[0, 1], matrix[1, 1], matrix[2, 1] };
+            float[] point3 = new float[] { matrix[0, 2], matrix[1, 2], matrix[2, 2] };
+
+            //Find the midpoint of point 1 and point 2
+            float[] midpoint = MulitplyScalar(AddArrays(point1, point2), 0.5f);
+
+            //Find the vector from the midpoint to point 3
+            float[] vector3 = new float[] { midpoint[0] - point3[0], midpoint[1] - point3[1], midpoint[2] - point3[2] };
+
+            //Find the distance of point 3 to the plane defined by vector 1 and the midpoint
+            //Uses the equation distance = |vector 1 (n) dot vector 3| / ||vector 1||
+            float distance = MathF.Abs(vector1[0] * vector3[0] + vector1[1] * vector3[1] + vector1[2] * vector3[2]) /
+                MathF.Sqrt(MathF.Pow(vector1[0], 2) + MathF.Pow(vector1[1], 2) + MathF.Pow(vector1[2], 2));
+
+            //Print the distance of the point to the plane
+            Console.WriteLine("Distance of the point to the plane that bisects the first 2 points:");
+            Console.WriteLine(SigDigRounder(distance, 4));
+        }
     }
 
     /// <summary>
@@ -343,5 +391,37 @@ public class MatrixManipulator
         }
 
         return number;
+    }
+
+    /// <summary>
+    /// Multiplies a 1D vector by a scalar
+    /// </summary>
+    /// <param name="vector">Vector to be multiplied</param>
+    /// <param name="scalar">scalar to mulptiply</param>
+    /// <returns>new 1D vector</returns>
+    public static float[] MulitplyScalar(float[] vector, float scalar)
+    {
+        float[] newArray = new float[vector.Length];
+        for (int i = 0; i < vector.Length; i++)
+        {
+            newArray[i] = vector[i] * scalar;
+        }
+        return newArray;
+    }
+
+    /// <summary>
+    /// Adds 2 equal size 1D arrays together
+    /// </summary>
+    /// <param name="a">first array</param>
+    /// <param name="b">second array</param>
+    /// <returns>the combined array</returns>
+    public static float[] AddArrays(float[] a, float[] b)
+    {
+        float[] newArray = new float[a.Length];
+        for (int i = 0; i < a.Length; i++)
+        {
+            newArray[i] = a[i] + b[i];
+        }
+        return newArray;
     }
 }

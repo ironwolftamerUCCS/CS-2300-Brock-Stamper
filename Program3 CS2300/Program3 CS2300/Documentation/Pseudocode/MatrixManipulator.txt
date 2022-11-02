@@ -76,6 +76,38 @@ function SolveEigenThings (A (2x2 matrix)) : Solves for eigenvalues, the eigenve
 
 function SolveTriangleThings (triangle's vertices) : Solves for the area of the triangle then the distance to the line or plane of the 3rd point
 
+	Set the vector from point 1 to point 2 (vector 1)
+	Set the vector from point 1 to point 3 (vector 2)
+
+	Find the cross product of the above 2 vectors
+	Find the area of the triangle, which is 1/2 the magnitude of the cross product
+
+	Print out area to user
+
+	Check to see if the triangle was set to a 2D triangle
+		Isolate point 1 and make 1D vector
+		Transpose vector 1 to make it 1D
+		
+		Find t in the equation q = p +tv (v is vector 1 in this case, q will be the foot of point 3)
+
+		Find the foot of the point using foot = point 1 + t * vector 1
+
+		Find the vector that goes from the foot to point 3
+		Find the distance of point 3 to the line (magnitude of the above vector)
+
+		Print the result to the user
+
+	else triangle must be 3D
+		
+		Isolate all 3 vertices and make them into 1D matrices	
+
+		Find the midpoint of the first 2 points (1/2 (point 1 + point 2))
+		
+		Find the vector that runs from the midpoint to point 3
+		Find the distance which is the absolute value of the dot product of vector 1 and vector 3 divided by the magnitude of vector 1
+
+		Print the resulte to the user 
+
 function SigDigRounder (A number, number of significant digits) : Rounds the input number to the appropriate amount of significant digits
 
 	Check to make sure the number isn't zero, is so, return the number
@@ -93,3 +125,19 @@ function CanRoundToZero (a number) : rounds a number to zero if it is within a c
 		if so, set number to zero
 
 	return the number
+
+fucntion MultiplyScalar (a 1D matrix, a scalar) : multiplies any 1D vector by a scalar
+
+	Create the output matrix
+
+	Loop through the 1D matrix and multiply each value by the scalar and add it to the appropriate place within the output matrix
+
+	Return the output array
+
+fucntion AddArrays (any 2 1D vectors (must be the same size)) : add any 2 same sized 1D vectors together
+
+	Create the output matrix
+
+	Loop through the first matrix and add each cell by the equivilant cell in the second matrix the put it in the same cell in the output matrix
+
+	Return the new matrix
