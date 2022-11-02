@@ -1,0 +1,15 @@
+Part 1:
+System Inconsistant
+
+Part 2:
+5 0
+0 0
+0.5 -2
+1 1
+1.25 2.5
+2.5 5
+1
+
+Part 3:
+2
+10.88

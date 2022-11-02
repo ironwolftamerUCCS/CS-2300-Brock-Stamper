@@ -1,0 +1,16 @@
+Part 1:
+-4
+4.5
+
+Part 2:
+5.3719997 0
+0 -0.3723
+0.4574 -1.4569999
+1 1
+0
+
+(I'm not sure why my sigdig rounder doesn't round correctly sometimes. Went through 2 different ones and both didn't round correctly)
+
+Part 3:
+0.5
+9.925
