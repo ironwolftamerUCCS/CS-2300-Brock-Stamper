@@ -29,7 +29,7 @@ function SolveMatrixEquation (A (2x2 matrix), b (2x1 matrix)) : solve the equati
 	solve for x2 by dividing b2 by a22
 	print out solution
 
-function MatrixMultiplier2D (2 2D matrices)
+function MatrixMultiplier2D (2 2D matrices) : multiplies 2
 
 	Instantiate output
 	Support for the loop
@@ -43,16 +43,101 @@ function MatrixMultiplier2D (2 2D matrices)
 	when all the columns of the second matrix are saved and mulitplied by the rows of the first matrix reset the row list and go back 2 steps
 	when all the rows of the first matrix are used return the new matrix
 
-SolveEigenThings (A (2x2 matrix)) : Solves for eigenvalues, the eigenvector, R, and computes RΛRT
+function SolveEigenThings (A (2x2 matrix)) : Solves for eigenvalues, the eigenvector, R, and computes RΛRT
 
 	Declare matrices for later
 
-	Solve for e1 and e2
-Check if inside of square root of quadratic equation greater than or equal to 0
-Declare insideOfQuadratric and set it equal to (a11 * a22)^2 – 4(a11 * a22 – a12 * a21)
-If insideOfQuadratic is less than 0
-	No real eigen values
-else
-	Compute e1 and e2
-	e1 equals negated a11 * a22 plus insideOfQuadratic all divided by 2
-	e2 equals negated a11 * a22 minus insideOfQuadratic all divided by 2
+	Solve for ba nd c of quadratic formula
+	find the discrminant of the quadratic formula
+	if the discriminant is less than 0 print "no solution to user" and exit function
+	
+	solve for eigen vectors using the quadratic equation variables from above
+
+	Create lambda, which is the eigen vector matrix * the identity
+	Print lambda to the user
+
+	Setup to solve for eigen values
+
+	Solve for the eigen manipulated matrices, using the A-I(lambda) equation
+	Pass in the eigen manipulated matrices with the zero vector to solve for the eigen vectors using SolveMatrixEquation
+
+	Create R, which is the eigen vectors put in a 2x2 (evector1 on the left, evector2 on the right)
+	Print R for the user
+	Transpose R
+
+	Calculate the eigendecomposition by multiplying R to lambda then to R transposed
+	Print the eigen decomp to the user
+
+	Test to see if the eigen decomp is the same as the input matrix
+	First set a value to see if the eigendecomp is a scaled version of the input matrix
+	Go through each of the input matrix's cells and see if the eigendecomp times the factor is that value
+
+	Print out if it is the same or not to user
+
+function SolveTriangleThings (triangle's vertices) : Solves for the area of the triangle then the distance to the line or plane of the 3rd point
+
+	Set the vector from point 1 to point 2 (vector 1)
+	Set the vector from point 1 to point 3 (vector 2)
+
+	Find the cross product of the above 2 vectors
+	Find the area of the triangle, which is 1/2 the magnitude of the cross product
+
+	Print out area to user
+
+	Check to see if the triangle was set to a 2D triangle
+		Isolate point 1 and make 1D vector
+		Transpose vector 1 to make it 1D
+		
+		Find t in the equation q = p +tv (v is vector 1 in this case, q will be the foot of point 3)
+
+		Find the foot of the point using foot = point 1 + t * vector 1
+
+		Find the vector that goes from the foot to point 3
+		Find the distance of point 3 to the line (magnitude of the above vector)
+
+		Print the result to the user
+
+	else triangle must be 3D
+		
+		Isolate all 3 vertices and make them into 1D matrices	
+
+		Find the midpoint of the first 2 points (1/2 (point 1 + point 2))
+		
+		Find the vector that runs from the midpoint to point 3
+		Find the distance which is the absolute value of the dot product of vector 1 and vector 3 divided by the magnitude of vector 1
+
+		Print the resulte to the user 
+
+function SigDigRounder (A number, number of significant digits) : Rounds the input number to the appropriate amount of significant digits
+
+	Check to make sure the number isn't zero, is so, return the number
+	
+	set scale to be the 10 raised to the natural log of the absolute value of the number rounded down plus 1
+	set the number to be the the number divided by the scale to the number of significant digits then multiply it by scale again to return to a decimal form
+
+	return the number
+
+function CanRoundToZero (a number) : rounds a number to zero if it is within a certain tolerance
+	
+	Set tolerance
+	
+	Check if the number is within the tolerance and the negated tolerance
+		if so, set number to zero
+
+	return the number
+
+fucntion MultiplyScalar (a 1D matrix, a scalar) : multiplies any 1D vector by a scalar
+
+	Create the output matrix
+
+	Loop through the 1D matrix and multiply each value by the scalar and add it to the appropriate place within the output matrix
+
+	Return the output array
+
+fucntion AddArrays (any 2 1D vectors (must be the same size)) : add any 2 same sized 1D vectors together
+
+	Create the output matrix
+
+	Loop through the first matrix and add each cell by the equivilant cell in the second matrix the put it in the same cell in the output matrix
+
+	Return the new matrix

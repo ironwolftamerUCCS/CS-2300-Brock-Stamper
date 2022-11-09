@@ -1,0 +1,22 @@
+For grader: I'm terribly sorry but I didn't read the instructions properly so the program does not actually create and output files, it only prints to the console. It was too late to fix it and I will read better next time. I will include the outputs in seperate txt documents for you.
+
+My program does the following:
+
+1st: It can take in a 2x2 matrix A and a 2x1 matrix B and solve for x in the equation Ax=b
+2nd: It can take in a 2x2 matrix A and solve for the eigenvalues, eigenvectors, and eigendecomposition
+3rd: It can take in either a 2D or 3D triangle and solve for the area. Then it will either solve for the distance of the third point of the triangle to the line made by the first 2 points or find the distance of the third point to the plane that bisects the midpoint of the first 2 points.
+
+NOTE: input has to be:
+"
+1 1 1
+1 1 1
+"
+(for all tests)
+or
+"
+1 1 1
+1 1 1
+1 1 1
+"
+(for test 3)
+with no extra white spaces
