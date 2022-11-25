@@ -54,7 +54,58 @@ public class MatrixManipulator
             results.Add(xPrime);
         }
         //Print out a txt file with the data
-        FileProcessor.OutputTxtFile(results, "ParallelProjectionresults.txt");
+        FileProcessor.OutputTxtFile(results, "ParallelProjectionResults.txt");
+    }
+
+    public static void PerspectiveProjection(List<float[]> input)
+    { 
+        //Set initial values
+        float[] pointOnPlane = input[0];
+        float[] normal = input[1];
+
+        //Instantiate output list
+        List<float[]> results = new List<float[]>();
+
+        //normalize n
+        float nMagnitude = MathF.Sqrt(MathF.Pow(normal[0], 2) + MathF.Pow(normal[1], 2) + MathF.Pow(normal[2], 2));
+        float[] normalizedNormal = new float[normal.Length];
+        normalizedNormal[0] = normal[0] / nMagnitude;
+        normalizedNormal[1] = normal[1] / nMagnitude;
+        normalizedNormal[2] = normal[2] / nMagnitude;
+
+        //Instantiate xPrime
+        float[] xPrime = new float[3];
+
+        //Find the parallel projection of the remaining list of arrays
+        for (int i = 3; i < input.Count; i++)
+        {
+            float[] x = input[i];
+
+            //Find numerator of projection equation ([q - x] dot n)
+            float numerator = DotProductCalculator1D(pointOnPlane, normalizedNormal);
+
+            //Find demonitator (direction vector dot n)
+            float denominator = DotProductCalculator1D(x, normalizedNormal);
+
+            if (denominator != 0)
+            {
+                //Solve for xPrime
+                xPrime = MulitplyScalar(x, numerator/denominator);
+            }
+            else
+            {
+                Console.WriteLine("Denom was 0");
+                xPrime[0] = 0;
+                xPrime[1] = 0;
+                xPrime[2] = 0;
+            }
+
+            //Add result to list
+            results.Add(xPrime);
+        }
+        //Print out a txt file with the data
+        FileProcessor.OutputTxtFile(results, "PerspectiveProjectionResults.txt");
+
     }
 
     #endregion

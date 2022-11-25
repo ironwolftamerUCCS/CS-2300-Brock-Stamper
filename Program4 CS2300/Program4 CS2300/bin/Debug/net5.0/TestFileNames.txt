@@ -1,1 +1,4 @@
 inputHW4_Part1_2.txt
+InputHW4_Part3.txt
+
+TextbookExampleTests.txt

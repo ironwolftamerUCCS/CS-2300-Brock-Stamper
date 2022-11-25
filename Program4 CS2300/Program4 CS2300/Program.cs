@@ -23,6 +23,7 @@ namespace Program4_CS2300
                     case 1:
                         List<float[]> projectionProblemData = FileProcessor.ReadInForProjectionProblem(fileName);
                         MatrixManipulator.ParallelProjection(projectionProblemData);
+                        MatrixManipulator.PerspectiveProjection(projectionProblemData);
                         break;
 
                     case 2:
