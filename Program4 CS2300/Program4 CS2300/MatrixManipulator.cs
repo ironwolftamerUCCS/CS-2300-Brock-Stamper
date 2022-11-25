@@ -7,7 +7,55 @@ public class MatrixManipulator
 {
     #region Program4 Methods
 
+    public static void ParallelProjection(List<float[]> input)
+    {
+        //Set initial values
+        float[] pointOnPlane = input[0];
+        float[] normal = input[1];
+        float[] directionVector = input[2];
 
+        //Instantiate output list
+        List<float[]> results = new List<float[]>();
+
+        //normalize n
+        float nMagnitude = MathF.Sqrt(MathF.Pow(normal[0], 2) + MathF.Pow(normal[1], 2) + MathF.Pow(normal[2], 2));
+        float[] normalizedNormal = new float[normal.Length];
+        normalizedNormal[0] = normal[0] / nMagnitude;
+        normalizedNormal[1] = normal[1] / nMagnitude;
+        normalizedNormal[2] = normal[2] / nMagnitude;
+
+        //Instantiate xPrime
+        float[] xPrime = new float[3];
+
+        //Find the parallel projection of the remaining list of arrays
+        for (int i = 3; i < input.Count; i++)
+        {
+            float[] x = input[i];
+
+            //Find numerator of projection equation ([q - x] dot n)
+            float numerator = DotProductCalculator1D(AddOrSubtractArrays(directionVector, x, false), normalizedNormal);
+
+            //Find demonitator (direction vector dot n)
+            float denominator = DotProductCalculator1D(directionVector, normalizedNormal);
+
+            if (denominator != 0)
+            {
+                xPrime = AddOrSubtractArrays(x, MulitplyScalar(directionVector, numerator / denominator), true);
+            }
+            else
+            {
+                Console.WriteLine("Denom was 0");
+                xPrime[0] = 0;
+                xPrime[1] = 0;
+                xPrime[2] = 0;
+            }
+
+            //Add result to list
+            results.Add(xPrime);
+        }
+        //Print out a txt file with the data
+        FileProcessor.OutputTxtFile(results, "ParallelProjectionresults.txt");
+    }
 
     #endregion
 
@@ -247,7 +295,7 @@ public class MatrixManipulator
             float t = (vector1Transposed[0] * vector2[0] + vector1Transposed[1] * vector2[1]) / (MathF.Pow(vector1Transposed[0], 2) + MathF.Pow(vector1Transposed[1], 2));
 
             //Find the foot of the point
-            float[] foot = AddArrays(point, MulitplyScalar(vector1Transposed, t));
+            float[] foot = AddOrSubtractArrays(point, MulitplyScalar(vector1Transposed, t), true);
 
             //Find the vector that goes from the foot to the third point
             float[] distanceVector = new float[] { foot[0] - matrix[0, 2], foot[1] - matrix[1, 2] };
@@ -267,7 +315,7 @@ public class MatrixManipulator
             float[] point3 = new float[] { matrix[0, 2], matrix[1, 2], matrix[2, 2] };
 
             //Find the midpoint of point 1 and point 2
-            float[] midpoint = MulitplyScalar(AddArrays(point1, point2), 0.5f);
+            float[] midpoint = MulitplyScalar(AddOrSubtractArrays(point1, point2, true), 0.5f);
 
             //Find the vector from the midpoint to point 3
             float[] vector3 = new float[] { midpoint[0] - point3[0], midpoint[1] - point3[1], midpoint[2] - point3[2] };
@@ -308,13 +356,21 @@ public class MatrixManipulator
     /// </summary>
     /// <param name="a">first array</param>
     /// <param name="b">second array</param>
+    /// <param name="add">Whether or not to add, if false, subtracts</param>
     /// <returns>the combined array</returns>
-    public static float[] AddArrays(float[] a, float[] b)
+    public static float[] AddOrSubtractArrays(float[] a, float[] b, bool add)
     {
         float[] newArray = new float[a.Length];
         for (int i = 0; i < a.Length; i++)
         {
-            newArray[i] = a[i] + b[i];
+            if (add)
+            {
+                newArray[i] = a[i] + b[i];
+            }
+            else if (!add)
+            {
+                newArray[i] = a[i] - b[i];
+            }
         }
         return newArray;
     }
@@ -376,6 +432,28 @@ public class MatrixManipulator
 
         return output;
     }
+
+    /// <summary>
+    /// Performs the dot product operation on 2 equal size 1D matrices
+    /// </summary>
+    /// <param name="matrix1">first matrix</param>
+    /// <param name="matrix2">second matrix</param>
+    /// <returns></returns>
+    public static float DotProductCalculator1D (float[] matrix1, float[] matrix2)
+    {
+        //Initialize output
+        float output = 0;
+
+        //Add to output the product of each row of the 2 input matrices
+        for (int i = 0; i < matrix1.Length; i++)
+        {
+            output += matrix1[i] * matrix2[i];
+        }
+
+        return output;
+    }
+
+    //public static float[] 
 
     #endregion
 
