@@ -16,19 +16,23 @@ namespace Program4_CS2300
                 string fileName = Console.ReadLine();
 
                 //Ask which test to run on the file
-                Console.WriteLine("Which test would you like to run? (1 (projection), 2, or 3)");
+                Console.WriteLine("Which test would you like to run? (1 (projection), 2 (distance and intersection), or 3 (Google PageRank))");
                 int test = int.Parse(Console.ReadLine());
                 switch (test)
                 {
                     case 1:
                         List<float[]> projectionProblemData = FileProcessor.ReadInForProjectionProblem(fileName);
+                        FileProcessor.OutputTxtFile(projectionProblemData, "ppd.txt");
                         MatrixManipulator.ParallelProjection(projectionProblemData);
                         MatrixManipulator.PerspectiveProjection(projectionProblemData);
                         break;
 
                     case 2:
-                        Console.WriteLine("Under construction");
+                        List<float[]> lineToPlaneDistanceData = FileProcessor.ReadInForProjectionProblem(fileName);
+                        FileProcessor.OutputTxtFile(lineToPlaneDistanceData, "lypdd.txt");
+                        MatrixManipulator.DistanceToPlane(lineToPlaneDistanceData);
                         break;
+
                     case 3:
                         Console.WriteLine("Under construction");
                         break;

@@ -7,6 +7,11 @@ public class MatrixManipulator
 {
     #region Program4 Methods
 
+    /// <summary>
+    /// Calculates the parallel projection of the points in the input. First line defines the point on plane (q),
+    /// the normal (n), and the direction vector (v)
+    /// </summary>
+    /// <param name="input">input values</param>
     public static void ParallelProjection(List<float[]> input)
     {
         //Set initial values
@@ -40,7 +45,7 @@ public class MatrixManipulator
 
             if (denominator != 0)
             {
-                xPrime = AddOrSubtractArrays(x, MulitplyScalar(directionVector, numerator / denominator), true);
+                xPrime = AddOrSubtractArrays(x, MultiplyScalar(directionVector, numerator / denominator), true);
             }
             else
             {
@@ -57,6 +62,11 @@ public class MatrixManipulator
         FileProcessor.OutputTxtFile(results, "ParallelProjectionResults.txt");
     }
 
+    /// <summary>
+    /// Calculates the perspective projection of the points in the input. First line defines the point on plane (q),
+    /// the normal (n), third value on line 1 is unused
+    /// </summary>
+    /// <param name="input">input values</param>
     public static void PerspectiveProjection(List<float[]> input)
     { 
         //Set initial values
@@ -90,7 +100,7 @@ public class MatrixManipulator
             if (denominator != 0)
             {
                 //Solve for xPrime
-                xPrime = MulitplyScalar(x, numerator/denominator);
+                xPrime = MultiplyScalar(x, numerator/denominator);
             }
             else
             {
@@ -105,6 +115,74 @@ public class MatrixManipulator
         }
         //Print out a txt file with the data
         FileProcessor.OutputTxtFile(results, "PerspectiveProjectionResults.txt");
+
+    }
+
+    /// <summary>
+    /// Finds the distance to a plane (given in the first 2 matrices) to the point given by the third
+    /// </summary>
+    /// <param name="input">input values</param>
+    public static void DistanceToPlane(List<float[]> input)
+    {
+        //Instantiate results list
+        List<float> results = new List<float>();
+
+        //Loop through the list and use the first 2 matrices to define the plane
+        //Then calculate the distance of the point to the plane with the last matrix
+        for (int i = 0; i < input.Count; i++)
+        {
+            //Set initial values
+            float[] pointOnPlane = input[i];
+            float[] normal = input[i + 1];
+            float[] p = input[i + 2];
+
+            //normalize the normal
+            float nMagnitude = MathF.Sqrt(MathF.Pow(normal[0], 2) + MathF.Pow(normal[1], 2) + MathF.Pow(normal[2], 2));
+            float[] normalizedNormal = new float[normal.Length];
+            normalizedNormal[0] = normal[0] / nMagnitude;
+            normalizedNormal[1] = normal[1] / nMagnitude;
+            normalizedNormal[2] = normal[2] / nMagnitude;
+
+            //Find c in the plane equation (n dot x (point on plane) + c = 0) 
+            float c = -DotProductCalculator1D(normalizedNormal, pointOnPlane);
+
+            //Caclulate t using c + p dot n
+            float t = c + DotProductCalculator1D(p, normalizedNormal);
+
+            //Calculate the point on the line using q = p - tn
+            float[] q = AddOrSubtractArrays(p, MultiplyScalar(normalizedNormal, t), false);
+
+            //Calculate the magnitude of the line between p and q (which is the distance to the plane)
+            float[] line = AddOrSubtractArrays(p, q, false);
+            float distance = MathF.Sqrt(MathF.Pow(line[0], 2) + MathF.Pow(line[1], 2) + MathF.Pow(line[2], 2));
+
+            //Add distance to results
+            results.Add(distance);
+
+            //increment i for the next iteration
+            i += 2;
+        }
+
+        //Print out results to a txt file
+        FileProcessor.OutputSingleLineTxtFile(results, "PointToPlaneDistanceResults.txt");
+    }
+
+    public static void TriangleLineIntersection(List<float[]> input)
+    {
+        //Instantiate values for the line
+        float[] p = input[0];
+        float[] q = input[1];
+        float[] v = AddOrSubtractArrays(p, q, false);
+
+        //Loop through the rest of the input and calculate if the line intersects the triangle
+        for (int i = 3; i < input.Count; i++)
+        {
+
+        }
+    }
+
+    public static void GooglePageRank()
+    {
 
     }
 
@@ -346,7 +424,7 @@ public class MatrixManipulator
             float t = (vector1Transposed[0] * vector2[0] + vector1Transposed[1] * vector2[1]) / (MathF.Pow(vector1Transposed[0], 2) + MathF.Pow(vector1Transposed[1], 2));
 
             //Find the foot of the point
-            float[] foot = AddOrSubtractArrays(point, MulitplyScalar(vector1Transposed, t), true);
+            float[] foot = AddOrSubtractArrays(point, MultiplyScalar(vector1Transposed, t), true);
 
             //Find the vector that goes from the foot to the third point
             float[] distanceVector = new float[] { foot[0] - matrix[0, 2], foot[1] - matrix[1, 2] };
@@ -366,7 +444,7 @@ public class MatrixManipulator
             float[] point3 = new float[] { matrix[0, 2], matrix[1, 2], matrix[2, 2] };
 
             //Find the midpoint of point 1 and point 2
-            float[] midpoint = MulitplyScalar(AddOrSubtractArrays(point1, point2, true), 0.5f);
+            float[] midpoint = MultiplyScalar(AddOrSubtractArrays(point1, point2, true), 0.5f);
 
             //Find the vector from the midpoint to point 3
             float[] vector3 = new float[] { midpoint[0] - point3[0], midpoint[1] - point3[1], midpoint[2] - point3[2] };
@@ -392,7 +470,7 @@ public class MatrixManipulator
     /// <param name="vector">Vector to be multiplied</param>
     /// <param name="scalar">scalar to mulptiply</param>
     /// <returns>new 1D vector</returns>
-    public static float[] MulitplyScalar(float[] vector, float scalar)
+    public static float[] MultiplyScalar(float[] vector, float scalar)
     {
         float[] newArray = new float[vector.Length];
         for (int i = 0; i < vector.Length; i++)
