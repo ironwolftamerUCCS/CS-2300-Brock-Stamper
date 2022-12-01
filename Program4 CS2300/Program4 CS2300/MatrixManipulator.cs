@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
+using System.Numerics;
 using static System.Formats.Asn1.AsnWriter;
 
 public class MatrixManipulator
@@ -181,9 +183,79 @@ public class MatrixManipulator
         }
     }
 
-    public static void GooglePageRank()
+    /// <summary>
+    /// Using the google pagerank algorithm, calculates the eigenvalues and vectors for the input matrix
+    /// </summary>
+    /// <param name="pages">pages</param>
+    public static void GooglePageRank(float[,] pages)
     {
+        //Check to make sure the input is stochastic
+        bool stochastic = true;
+        float tolerance = 0.01f;
+        for (int i = 0; i < pages.GetLength(0); i++)
+        {
+            float rowValue = 0;
+            int j = 0; 
+            while (j < pages.GetLength(0))
+            {
+                rowValue += pages[j, i];
+                j++;
+            }
 
+            if (rowValue > 1 + tolerance || rowValue < 1 - tolerance)
+            {
+                stochastic = false;
+            }
+        }
+
+        //Check for negative values
+        bool noNegatives = true;
+        for (int i = 0; i < pages.GetLength(0); i++)
+        {
+            int j = 0;
+            while (j < pages.GetLength(0))
+            {
+                if (pages[i , j] < 0)
+                {
+                    noNegatives = false;
+                }
+
+                j++;
+            }
+        }
+
+        if (noNegatives && stochastic)
+        {
+            //Instantiate first r value for our iteration
+            float[,] r = new float[pages.GetLength(0), 1];
+            for (int i = 0; i < pages.GetLength(0); i++)
+            {
+                r[i, 0] = 1;
+            }
+
+            //Multiply pages and r together 50 times to narrow down eigenvector
+            float infinityNorm = 0;
+            int maxTimes = 5;
+            for (int i = 0; i < maxTimes; i++)
+            {
+                infinityNorm = 0;
+                r = MatrixMultiplier2D(pages, r);
+                foreach (float num in r)
+                {
+                    if (infinityNorm < MathF.Abs(num))
+                    {
+                        infinityNorm = MathF.Abs(num);
+                    }
+                }
+                r = MultiplyScalar2D(r, 1 / infinityNorm);
+            }
+
+            Print2DMatrix(r);
+        }
+        else
+        {
+            Console.WriteLine("invalid input");
+        }
     }
 
     #endregion
@@ -481,6 +553,27 @@ public class MatrixManipulator
     }
 
     /// <summary>
+    /// Multiplies a 2D vector by a scalar
+    /// </summary>
+    /// <param name="vector">Vector to be multiplied</param>
+    /// <param name="scalar">scalar to mulptiply</param>
+    /// <returns>new 1D vector</returns>
+    public static float[,] MultiplyScalar2D(float[,] matrix, float scalar)
+    {
+        float[,] newArray = new float[matrix.GetLength(0), matrix.GetLength(1)];
+        for (int i = 0; i < matrix.GetLength(0); i++)
+        {
+            int j = 0;
+            while (j < matrix.GetLength(1))
+            {
+                newArray[i, j] = matrix[i, j] * scalar;
+                j++;
+            }
+        }
+        return newArray;
+    }
+
+    /// <summary>
     /// Adds 2 equal size 1D arrays together
     /// </summary>
     /// <param name="a">first array</param>
@@ -516,47 +609,15 @@ public class MatrixManipulator
         float[,] output = new float[m1.GetLength(0), m2.GetLength(1)];
 
         //Loop support
-        List<float> rowNums = new List<float>();
-        List<float> columnNums = new List<float>();
-        int row1 = 0;
-        int row2 = 0;
-        int col1 = 0;
-        int col2 = 0;
-
-        //Multiply the matrices
-        //Take each row
-        while (row1 < m1.GetLength(0))
+        for (int i = 0; i < m1.GetLength(0); i++)
         {
-            //Save each column value in a list
-            while (col1 < m1.GetLength(1))
+            for (int j = 0; j < m2.GetLength(1); j++)
             {
-                rowNums.Add(m1[row1, col1]);
-                col1++;
-            }
-            //Take each column
-            while (col2 < m2.GetLength(1))
-            {
-                //Save each row value in a list
-                while (row2 < m2.GetLength(0))
+                for (int k = 0; k < m1.GetLength(1); k++)
                 {
-                    columnNums.Add(m2[row2, col2]);
-                    row2++;
+                    output[i, j] += m1[i, k] * m2[k, j];
                 }
-                //Loop through both lists adding together each position's product ([1]*[1] + [2]*[2] +...)
-                for (int i = 0; i < rowNums.Count; i++)
-                {
-                    output[row1, col2] += rowNums[i] * columnNums[i];
-                }
-                //Clear the column list to go back and save the next set of row values in the next column
-                columnNums.Clear();
-                row2 = 0;
-                col2++;
             }
-            //Clear the row list to go back and save the next set of column values in the next row
-            rowNums.Clear();
-            col1 = 0;
-            col2 = 0;
-            row1++;
         }
 
         return output;

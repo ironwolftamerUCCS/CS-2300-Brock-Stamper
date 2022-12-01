@@ -34,7 +34,8 @@ namespace Program4_CS2300
                         break;
 
                     case 3:
-                        Console.WriteLine("Under construction");
+                        float[,] googlePageRankData = FileProcessor.GooglePageRankReader(fileName);
+                        MatrixManipulator.GooglePageRank(googlePageRankData);
                         break;
 
                     default: Console.WriteLine("Invalid answer"); break;
