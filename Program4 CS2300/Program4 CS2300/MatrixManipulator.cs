@@ -169,6 +169,10 @@ public class MatrixManipulator
         FileProcessor.OutputSingleLineTxtFile(results, "PointToPlaneDistanceResults.txt");
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="input"></param>
     public static void TriangleLineIntersection(List<float[]> input)
     {
         //Instantiate values for the line
@@ -198,7 +202,7 @@ public class MatrixManipulator
             int j = 0; 
             while (j < pages.GetLength(0))
             {
-                rowValue += pages[j, i];
+                rowValue += pages[i, j];
                 j++;
             }
 
@@ -235,7 +239,7 @@ public class MatrixManipulator
 
             //Multiply pages and r together 50 times to narrow down eigenvector
             float infinityNorm = 0;
-            int maxTimes = 5;
+            int maxTimes = 50;
             for (int i = 0; i < maxTimes; i++)
             {
                 infinityNorm = 0;
@@ -250,7 +254,43 @@ public class MatrixManipulator
                 r = MultiplyScalar2D(r, 1 / infinityNorm);
             }
 
-            Print2DMatrix(r);
+            //Add the indices of the pages to r
+            float[,] rWithIndices = new float[r.GetLength(0), 2];
+            for (int i = 0; i < r.GetLength(0); i++)
+            {
+                rWithIndices[i, 0] = r[i, 0];
+                rWithIndices[i, 1] = i;
+            }
+
+            //Sort r from greatest to least
+            int numElements = r.GetLength(0);
+
+            // work from left to right 
+            for (int k = 0; k < numElements; k++)
+            {
+                int maxLocation = k;
+
+                // traverse unsorted portion of array 
+                for (int i = k + 1; i < numElements; i++)
+                {
+                    // check for a new minimum location 
+                    if (r[i, 0] > r[maxLocation, 0])
+                    {
+                        maxLocation = i;
+                    }
+                }
+
+                //Swap the rows
+                float leftHolder = rWithIndices[k, 0];
+                float rightHolder = rWithIndices[k, 1];
+                rWithIndices[k, 0] = rWithIndices[maxLocation, 0];
+                rWithIndices[k, 1] = rWithIndices[maxLocation, 1];
+                rWithIndices[maxLocation, 0] = leftHolder;
+                rWithIndices[maxLocation, 1] = rightHolder;
+            }
+
+            //Print the matrix 
+            Print2DMatrix(rWithIndices);
         }
         else
         {
