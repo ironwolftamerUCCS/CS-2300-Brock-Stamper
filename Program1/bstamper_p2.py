@@ -43,3 +43,5 @@ np.savetxt('bstamper_p2_out45.txt', mat45, fmt='%1.1f')
 #mat54
 mat54 = np.add(mat5, mat4)
 np.savetxt('bstamper_p2_out54.txt', mat54, fmt='%1.1f')
+
+print(mat1)

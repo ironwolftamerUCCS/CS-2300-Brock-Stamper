@@ -47,6 +47,7 @@ public class MatrixManipulator
 
             if (denominator != 0)
             {
+                //Calculate xPrime using x + v * numerator/denominator
                 xPrime = AddOrSubtractArrays(x, MultiplyScalar(directionVector, numerator / denominator), true);
             }
             else
@@ -175,16 +176,7 @@ public class MatrixManipulator
     /// <param name="input"></param>
     public static void TriangleLineIntersection(List<float[]> input)
     {
-        //Instantiate values for the line
-        float[] p = input[0];
-        float[] q = input[1];
-        float[] v = AddOrSubtractArrays(p, q, false);
-
-        //Loop through the rest of the input and calculate if the line intersects the triangle
-        for (int i = 3; i < input.Count; i++)
-        {
-
-        }
+        //I couldn't figure this out... 
     }
 
     /// <summary>
@@ -274,7 +266,7 @@ public class MatrixManipulator
                 for (int i = k + 1; i < numElements; i++)
                 {
                     // check for a new minimum location 
-                    if (r[i, 0] > r[maxLocation, 0])
+                    if (rWithIndices[i, 0] > rWithIndices[maxLocation, 0])
                     {
                         maxLocation = i;
                     }
@@ -289,12 +281,20 @@ public class MatrixManipulator
                 rWithIndices[maxLocation, 1] = rightHolder;
             }
 
-            //Print the matrix 
-            Print2DMatrix(rWithIndices);
+            //Get just the ranking of the webpages
+            float[,] webPageRanking = new float[r.GetLength(0), 1];
+            for (int i = 0; i < rWithIndices.GetLength(0); i++)
+            {
+                webPageRanking[i, 0] = rWithIndices[i, 1];
+            }
+
+            //Output to file
+            FileProcessor.OutputSingleLineTxtFileFor2DMatrix(r, "RankingEigenResults.txt");
+            FileProcessor.OutputSingleLineTxtFileFor2DMatrix(webPageRanking, "WebpageRankingResults.txt");
         }
         else
         {
-            Console.WriteLine("invalid input");
+            FileProcessor.OutputSingleLineTxtFileForStrings("Invalid input", "WebpageRankingResults.txt");
         }
     }
 
