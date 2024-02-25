@@ -86,6 +86,63 @@ public class FileProcessor
         }
     }
 
+    /// <summary>
+    /// For part 3 output. Prints one thing per line
+    /// </summary>
+    /// <param name="thingToPrint"></param>
+    /// <param name="fileName"></param>
+    /// <returns></returns>
+    public static void OutputSingleLineTxtFileFor2DMatrix(float[,] thingToPrint, string fileName)
+    {
+        FileStream stream = new FileStream(fileName, FileMode.OpenOrCreate);
+
+        try
+        {
+            using (StreamWriter writer = new StreamWriter(stream))
+            {
+                foreach (float value in thingToPrint)
+                {
+                    writer.WriteLine(value);
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
+        finally
+        {
+            stream.Close();
+        }
+    }
+
+    /// <summary>
+    /// For outputing strings
+    /// </summary>
+    /// <param name="thingToPrint"></param>
+    /// <param name="fileName"></param>
+    /// <returns></returns>
+    public static void OutputSingleLineTxtFileForStrings(string thingToPrint, string fileName)
+    {
+        FileStream stream = new FileStream(fileName, FileMode.OpenOrCreate);
+
+        try
+        {
+            using (StreamWriter writer = new StreamWriter(stream))
+            {
+                writer.Write(thingToPrint);
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
+        finally
+        {
+            stream.Close();
+        }
+    }
+
     #endregion
 
     #region Program4 Readers
